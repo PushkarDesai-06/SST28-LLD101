@@ -1,14 +1,36 @@
+import java.util.Arrays;
+import java.util.List;
+
 public class DiscountRules {
-    public static double discountAmount(String customerType, double subtotal, int distinctLines) {
-        // hard-coded policy (smell)
-        if ("student".equalsIgnoreCase(customerType)) {
-            if (subtotal >= 180.0) return 10.0;
-            return 0.0;
-        }
-        if ("staff".equalsIgnoreCase(customerType)) {
-            if (distinctLines >= 3) return 15.0;
-            return 5.0;
-        }
-        return 0.0;
+
+    public static List<DiscountRule> defaultRules() {
+        return Arrays.asList(
+                new DiscountRule() {
+                    public boolean appliesTo(String t) {
+                        return "student".equalsIgnoreCase(t);
+                    }
+
+                    public double discountAmount(double subtotal, int distinctLines) {
+                        return subtotal >= 180.0 ? 10.0 : 0.0;
+                    }
+                },
+                new DiscountRule() {
+                    public boolean appliesTo(String t) {
+                        return "staff".equalsIgnoreCase(t);
+                    }
+
+                    public double discountAmount(double subtotal, int distinctLines) {
+                        return distinctLines >= 3 ? 15.0 : 5.0;
+                    }
+                },
+                new DiscountRule() { // default / no discount
+                    public boolean appliesTo(String t) {
+                        return true;
+                    }
+
+                    public double discountAmount(double subtotal, int distinctLines) {
+                        return 0.0;
+                    }
+                });
     }
 }
