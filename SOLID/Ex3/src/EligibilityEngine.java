@@ -13,33 +13,23 @@ public class EligibilityEngine {
     }
 
     public EligibilityEngineResult evaluate(StudentProfile s) {
+        RuleInput input = new RuleInput();
         List<String> reasons = new ArrayList<>();
-        String status = "ELIGIBLE";
+        List<Rule> rules = List.of(
+                new DisiplinaryFlagRule(s, reasons),
+                new CgrRule(s, reasons, input),
+                new AttendanceRule(s, reasons, input),
+                new CreditRule(s, reasons, input)
 
-        // OCP violation: long chain for each rule
-        if (s.disciplinaryFlag != LegacyFlags.NONE) {
-            status = "NOT_ELIGIBLE";
-            reasons.add("disciplinary flag present");
-        } else if (s.cgr < 8.0) {
-            status = "NOT_ELIGIBLE";
-            reasons.add("CGR below 8.0");
-        } else if (s.attendancePct < 75) {
-            status = "NOT_ELIGIBLE";
-            reasons.add("attendance below 75");
-        } else if (s.earnedCredits < 20) {
-            status = "NOT_ELIGIBLE";
-            reasons.add("credits below 20");
+        );
+
+        boolean status = true;
+
+        for (Rule r : rules) {
+            status = status & r.check();
         }
 
-        return new EligibilityEngineResult(status, reasons);
+        return new EligibilityEngineResult(status ? "ELIGIBLE" : "NOT_ELIGIBLE", reasons);
     }
 }
 
-class EligibilityEngineResult {
-    public final String status;
-    public final List<String> reasons;
-    public EligibilityEngineResult(String status, List<String> reasons) {
-        this.status = status;
-        this.reasons = reasons;
-    }
-}
