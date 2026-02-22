@@ -3,25 +3,31 @@ import java.util.List;
 import java.util.Map;
 
 public class Validator {
-    public boolean validateStudentRecord(Map<String, String> kv) {
+    public List<String> validateStudentRecord(Map<String, String> kv) {
         String name = kv.getOrDefault("name", "");
         String email = kv.getOrDefault("email", "");
         String phone = kv.getOrDefault("phone", "");
         String program = kv.getOrDefault("program", "");
 
-
         List<String> errors = new ArrayList<>();
-        if (name.isBlank()) errors.add("name is required");
-        if (email.isBlank() || !email.contains("@")) errors.add("email is invalid");
-        if (phone.isBlank() || !phone.chars().allMatch(Character::isDigit)) errors.add("phone is invalid");
-        if (!(program.equals("CSE") || program.equals("AI") || program.equals("SWE"))) errors.add("program is invalid");
+        if (name.isBlank())
+            errors.add("name is required");
+        if (email.isBlank() || !email.contains("@"))
+            errors.add("email is invalid");
+        if (phone.isBlank() || !phone.chars().allMatch(Character::isDigit))
+            errors.add("phone is invalid");
+        if (!(program.equals("CSE") || program.equals("AI") || program.equals("SWE")))
+            errors.add("program is invalid");
+        return errors;
 
-        if (!errors.isEmpty()) {
-            System.out.println("ERROR: cannot register");
-            for (String e : errors) System.out.println("- " + e);
-            return false;
-        }
+        // if (!errors.isEmpty()) {
+        // return errors;
+        // System.out.println("ERROR: cannot register");
+        // for (String e : errors)
+        // System.out.println("- " + e);
+        // return false;
+        // }
 
-        return true;
+        // return true;
     }
 }
