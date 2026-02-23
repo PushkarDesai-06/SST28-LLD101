@@ -7,7 +7,7 @@ public class Main {
 
         NotificationSender email = new EmailSender(audit);
         NotificationSender sms = new SmsSender(audit);
-        NotificationSender wa = new WhatsAppSender(audit);
+        PhoneNotificationSender wa = new WhatsAppSender(audit);
 
         email.send(n);
         sms.send(n);
