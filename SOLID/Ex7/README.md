@@ -51,6 +51,7 @@ AC OFF
 
 ## 9. Hints (OOP-only)
 - Capabilities: power control, brightness control, temperature control, scanning.
+
 - Keep composition: registry can return devices by capability rather than by concrete class.
 
 ## 10. Stretch goals
