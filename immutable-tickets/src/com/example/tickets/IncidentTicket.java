@@ -13,7 +13,6 @@ import java.util.List;
  * - tags list can be modified from outside
  * - validation is scattered elsewhere
  *
- * TODO (student): refactor to immutable + Builder.
  */
 public class IncidentTicket {
 

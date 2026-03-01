@@ -11,7 +11,6 @@ import java.util.List;
  * - mutates after creation (bad for auditability)
  * - validation is scattered & incomplete
  *
- * TODO (student):
  * - After introducing immutable IncidentTicket + Builder, refactor this to stop
  * mutating.
  */
