@@ -1,6 +1,5 @@
 import com.example.tickets.IncidentTicket;
 import com.example.tickets.TicketService;
-
 import java.util.List;
 
 /**
@@ -29,6 +28,7 @@ public class TryIt {
         tags.add("HACKED_FROM_OUTSIDE");
         System.out.println("\nAfter external tag mutation: " + t);
 
-        // Starter compiles; after refactor, you should redesign updates to create new objects instead.
+        // Starter compiles; after refactor, you should redesign updates to create new
+        // objects instead.
     }
 }
