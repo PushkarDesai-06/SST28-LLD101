@@ -7,14 +7,18 @@ public class OrderService {
     private final Map<String, PaymentGateway> gateways;
 
     public OrderService(Map<String, PaymentGateway> gateways) {
-        this.gateways = Objects.requireNonNull(gateways, "gateways");
+        Objects.requireNonNull(gateways, "gateways");
+        gateways.values().forEach((value) -> Objects.requireNonNull(value, "gateway cannot contain null values"));
+        // |-> eliminates worring about null values in the gateway
+        this.gateways = Map.copyOf(gateways); // defensive copy & immutable
     }
 
-    // Smell: still switches; your refactor should remove this by ensuring map contains adapters.
+    // Smell: still switches; your refactor should remove this by ensuring map
+    // contains adapters. -> done
     public String charge(String provider, String customerId, int amountCents) {
-        Objects.requireNonNull(provider, "provider");
+        if (!gateways.containsKey(provider))
+            throw new IllegalArgumentException("unknown provider: " + provider);
         PaymentGateway gw = gateways.get(provider);
-        if (gw == null) throw new IllegalArgumentException("unknown provider: " + provider);
         return gw.charge(customerId, amountCents);
     }
 }
