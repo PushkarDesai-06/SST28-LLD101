@@ -1,20 +1,27 @@
 import java.nio.charset.StandardCharsets;
 
-public class PdfExporter extends Exporter {
-    @Override
-    public ExportResult doExport(ExportRequest req) {
-        // maybe we can truncate output to still accept more than 20 chars...
+/**
+ * PdfExporter is intentionally NOT a subclass of Exporter.
+ *
+ * It has a hard limit of 20 characters per body, which is a tighter
+ * precondition than Exporter's contract allows. Forcing it into the Exporter
+ * hierarchy would break LSP — callers that hold an Exporter reference would
+ * get surprise exceptions for content that the base says is valid.
+ *
+ * Instead it is a standalone class with its own explicit contract:
+ * Precondition: req must not be null; req.body must be ≤ 20 characters.
+ */
+public class PdfExporter {
 
-        // if not then we have to remove the Exporter as parent of PdfExporter and make
-        // it a standalone class
+    private static final int MAX_BODY = 20;
 
-        String body = req.body;
-        String title = req.title;
-
-        if (body.length() > 20)
-            body = body.substring(0, 20); // truncates output
-
-        String fakePdf = "PDF(" + title + "):" + body;
+    public ExportResult export(ExportRequest req) {
+        if (req == null)
+            throw new IllegalArgumentException("Request cannot be null");
+        if (req.body != null && req.body.length() > MAX_BODY)
+            throw new IllegalArgumentException(
+                    "PDF cannot handle content > " + MAX_BODY + " chars");
+        String fakePdf = "PDF(" + req.title + "):" + req.body;
         return new ExportResult("application/pdf", fakePdf.getBytes(StandardCharsets.UTF_8));
     }
 }

@@ -7,11 +7,17 @@ public class Main {
 
         NotificationSender email = new EmailSender(audit);
         NotificationSender sms = new SmsSender(audit);
-        PhoneNotificationSender wa = new WhatsAppSender(audit);
+        NotificationSender wa = new WhatsAppSender(audit);
 
         email.send(n);
         sms.send(n);
+
+        // E.164 validation is the caller's responsibility — it does NOT belong
+        // inside the sender hierarchy (that would tighten the base precondition
+        // and break LSP). We validate here and handle the failure explicitly.
         try {
+            if (n.phone == null || !n.phone.startsWith("+"))
+                throw new IllegalArgumentException("phone must start with + and country code");
             wa.send(n);
         } catch (RuntimeException ex) {
             System.out.println("WA ERROR: " + ex.getMessage());

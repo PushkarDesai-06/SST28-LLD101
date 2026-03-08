@@ -4,8 +4,9 @@ public class SmsSender extends NotificationSender {
     }
 
     @Override
-    public void doSend(Notification n) {
-        // subject not applicable for SMS channel; field is intentionally unused
+    protected void doSend(Notification n) {
+        // SMS has no subject field; this is a channel constraint, not an LSP
+        // violation — base contract never promised subject would be forwarded.
         System.out.println("SMS -> to=" + n.phone + " body=" + n.body);
         audit.add("sms sent");
     }

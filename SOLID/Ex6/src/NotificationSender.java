@@ -1,3 +1,13 @@
+/**
+ * Base notification-sender contract.
+ *
+ * Precondition : n must not be null.
+ * Postcondition : the notification is dispatched on the channel (best-effort).
+ *
+ * Subtypes must NOT tighten preconditions (e.g. require a specific phone
+ * format) and must NOT surprise callers with undocumented exceptions.
+ * Channel-specific validation belongs in the caller, not in this hierarchy.
+ */
 public abstract class NotificationSender {
     protected final AuditLog audit;
 
@@ -5,13 +15,13 @@ public abstract class NotificationSender {
         this.audit = audit;
     }
 
-    // contract: n must not be null
-    public void send(Notification n) {
+    /** Template method — validates then delegates; not overridable. */
+    public final void send(Notification n) {
         if (n == null)
             throw new IllegalArgumentException("Notification cannot be null");
-
         doSend(n);
     }
 
-    public abstract void doSend(Notification n);
+    /** Subclasses implement channel-specific dispatch. n is guaranteed non-null. */
+    protected abstract void doSend(Notification n);
 }

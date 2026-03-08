@@ -4,12 +4,12 @@ public class EmailSender extends NotificationSender {
     }
 
     @Override
-    public void doSend(Notification n) {
-        // email channel has a 40-char body limit; truncate rather than reject
-        String body = n.body;
-        if (body != null && body.length() > 40)
-            body = body.substring(0, 40);
-        System.out.println("EMAIL -> to=" + n.email + " subject=" + n.subject + " body=" + body);
+    protected void doSend(Notification n) {
+        // Silent truncation was removed: it violated the postcondition by
+        // changing meaning without the caller's knowledge. If a body-length
+        // limit is a real requirement, enforce it in the caller or wrap it in
+        // a dedicated validator before dispatching.
+        System.out.println("EMAIL -> to=" + n.email + " subject=" + n.subject + " body=" + n.body);
         audit.add("email sent");
     }
 }

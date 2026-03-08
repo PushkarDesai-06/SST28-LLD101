@@ -41,8 +41,8 @@ public class MetricsRegistry implements Serializable {
     // BROKEN: racy lazy init; two threads can create two instances
     public static MetricsRegistry getInstance() {
 
-        if (INSTANCE == null) {
-            synchronized (MetricsRegistry.class) {
+        if (INSTANCE == null) { // no lock
+            synchronized (MetricsRegistry.class) { // check after getting the lock
                 if (INSTANCE == null) {
                     INSTANCE = new MetricsRegistry();
                 }
